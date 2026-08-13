@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BatGames — Profile Prototype</title>
+<style>
+:root{
+ --bg:#05070c;--panel:#0b111b;--panel2:#111827;--line:#263149;--soft:rgba(118,136,172,.16);
+ --text:#f5f7fb;--muted:#929daf;--purple:#8b53ff;--purple2:#6032d0;--purple3:#b69aff;
+ --green:#41d986;--yellow:#f3bd4f;--red:#ff6677;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#020409;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,textarea{font:inherit}
+body{overflow:hidden}
+.app{
+ width:100vw;height:100vh;min-width:1050px;min-height:650px;display:grid;grid-template-columns:235px 1fr;
+ background:
+ radial-gradient(820px 520px at 75% 15%,rgba(110,55,225,.16),transparent 68%),
+ linear-gradient(180deg,#080b12,#05070c 60%,#03050a);
+}
+.sidebar{
+ border-right:1px solid var(--soft);background:linear-gradient(180deg,#080b12,#060910);
+ padding:18px 14px 16px;display:flex;flex-direction:column
+}
+.brand{height:58px;display:flex;align-items:center;padding:0 7px 14px;border-bottom:1px solid var(--soft);margin-bottom:18px}
+.brand img{width:176px;height:44px;object-fit:cover;mix-blend-mode:screen;filter:contrast(1.15)}
+.nav{display:flex;flex-direction:column;gap:7px}
+.nav button{
+ height:46px;border:1px solid transparent;border-radius:13px;background:transparent;color:#97a2b6;
+ display:flex;align-items:center;gap:12px;padding:0 13px;text-align:left;cursor:pointer;transition:.18s
+}
+.nav button:hover,.navlink:hover{background:rgba(255,255,255,.03);color:#fff}
+.nav button.active,.navlink.active{background:linear-gradient(90deg,rgba(111,61,225,.24),rgba(108,66,208,.05));border-color:rgba(139,83,255,.34);color:#fff;box-shadow:inset 3px 0 0 var(--purple)}
+.navlink{border:1px solid transparent;border-radius:13px;background:transparent;color:#97a2b6;display:flex;align-items:center;gap:12px;padding:0 13px;text-align:left;cursor:pointer;transition:.18s;text-decoration:none}
+.ico{width:22px;text-align:center;font-size:18px}
+.nav span:last-child{font-size:13px;font-weight:660}
+.mode-box{margin-top:auto;border:1px solid rgba(139,83,255,.24);background:linear-gradient(145deg,rgba(83,43,168,.12),rgba(8,12,20,.76));border-radius:14px;padding:12px}
+.mode-box strong{display:block;font-size:12px} .mode-box small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
+.mode-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
+.mode-actions button{border:1px solid var(--line);background:#0b111b;color:#a9b2c0;border-radius:9px;padding:8px 5px;font-size:10px;cursor:pointer}
+.mode-actions button.active{border-color:#6c46cc;color:#fff;background:#171225}
+.main{overflow:auto;scrollbar-width:thin;scrollbar-color:#263149 transparent}
+.topbar{
+ height:70px;border-bottom:1px solid var(--soft);background:rgba(6,9,15,.68);backdrop-filter:blur(16px);
+ display:flex;align-items:center;justify-content:space-between;padding:0 27px;position:sticky;top:0;z-index:5
+}
+.topbar h1{font-size:15px;margin:0} .top-actions{display:flex;gap:9px;align-items:center}
+.iconbtn{width:38px;height:38px;border-radius:12px;border:1px solid var(--soft);background:#0c121c;color:#c8d0de;cursor:pointer}
+.iconbtn:hover{border-color:#594089;color:white}
+.profile-wrap{padding:26px 30px 34px;max-width:1350px;margin:0 auto}
+.banner{
+ height:185px;border-radius:22px;border:1px solid rgba(139,83,255,.26);position:relative;overflow:hidden;
+ background:
+ radial-gradient(circle at 73% 38%,rgba(139,83,255,.45),transparent 24%),
+ linear-gradient(125deg,#10162a 0%,#17112b 54%,#090e18 100%);
+ box-shadow:0 22px 60px rgba(0,0,0,.35)
+}
+.banner::before{
+ content:"";position:absolute;right:8%;top:-30px;width:330px;height:250px;opacity:.35;
+ background:#7d4ce1;clip-path:polygon(50% 40%,60% 14%,84% 0,76% 30%,100% 40%,72% 49%,65% 86%,50% 61%,35% 86%,28% 49%,0 40%,24% 30%,16% 0,40% 14%)
+}
+.banner-actions{position:absolute;right:18px;top:16px;display:flex;gap:8px}
+.small-btn{border:1px solid #34415a;background:rgba(10,14,24,.76);color:#dce2ec;border-radius:10px;padding:9px 12px;font-size:11px;cursor:pointer}
+.small-btn:hover{background:#151d2b;border-color:#594482}
+.identity{
+ display:grid;grid-template-columns:auto 1fr auto;gap:17px;align-items:end;margin-top:-49px;padding:0 18px;position:relative;z-index:2
+}
+.big-avatar{
+ width:104px;height:104px;border-radius:28px;border:5px solid #070a11;background:linear-gradient(145deg,#6c43c0,#171c2d);
+ display:grid;place-items:center;font-size:38px;font-weight:900;box-shadow:0 12px 35px #0008;position:relative
+}
+.online-dot{position:absolute;right:3px;bottom:3px;width:18px;height:18px;border-radius:50%;background:var(--green);border:4px solid #070a11}
+.name-wrap{padding-bottom:6px}
+.name-wrap h2{font-size:28px;margin:0 0 2px;letter-spacing:-.03em}
+.handle{color:#8f9aae;font-size:12px}
+.status-line{margin-top:8px;font-size:12px;color:#c8cfda}
+.status-line span{color:#aa87ff}
+.profile-stats{display:flex;gap:24px;padding-bottom:8px}
+.stat strong{display:block;font-size:17px;text-align:center} .stat span{font-size:10px;color:var(--muted)}
+
+.grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(320px,.8fr);gap:18px;margin-top:24px}
+.card{border:1px solid var(--soft);border-radius:18px;background:linear-gradient(180deg,#0c121c,#090e16);overflow:hidden}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:15px 16px;border-bottom:1px solid var(--soft)}
+.card-head strong{font-size:12px;letter-spacing:.04em} .link{font-size:10px;color:#a884ff;cursor:pointer}
+.about{padding:16px}
+.about p{font-size:12px;line-height:1.6;color:#aeb8c7;margin:0}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
+.tag{border:1px solid #303b52;background:#101622;color:#aeb7c5;border-radius:999px;padding:6px 9px;font-size:9.5px}
+.activity{padding:7px 12px 13px}
+.activity-item{display:grid;grid-template-columns:48px 1fr auto;gap:11px;align-items:center;padding:9px 4px}
+.activity-item+.activity-item{border-top:1px solid rgba(120,136,168,.1)}
+.thumb{width:48px;height:48px;border-radius:11px;display:grid;place-items:center;font-size:22px;background:#192238}
+.acopy strong{display:block;font-size:11px} .acopy span{display:block;font-size:9.5px;color:var(--muted);margin-top:3px}
+.acopy em{font-style:normal;color:#b093ff}
+.when{font-size:9px;color:#667289}
+.current-game{padding:14px}
+.gamehero{height:142px;border-radius:14px;position:relative;overflow:hidden;background:radial-gradient(circle at 70% 30%,rgba(139,83,255,.5),transparent 28%),linear-gradient(135deg,#1b1430,#0c2027)}
+.gamehero::after{content:"🏰";position:absolute;right:32px;bottom:18px;font-size:63px;filter:drop-shadow(0 10px 10px #0008)}
+.gamehero-copy{position:absolute;left:16px;bottom:15px;z-index:2}
+.gamehero-copy small{color:#b99bff;font-size:9px;font-weight:900;letter-spacing:.09em} .gamehero-copy h3{font-size:18px;margin:4px 0 2px}
+.gamehero-copy span{font-size:9.5px;color:#aab4c4}
+.game-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.primary{border:0;border-radius:11px;background:linear-gradient(135deg,var(--purple),var(--purple2));color:#fff;padding:10px;font-weight:780;cursor:pointer}
+.secondary{border:1px solid #303b52;border-radius:11px;background:#0e151f;color:#dbe1ec;padding:10px;font-weight:720;cursor:pointer}
+.privacy-row{display:flex;align-items:center;justify-content:space-between;margin-top:11px;padding:10px;border-radius:11px;background:#0a1018;border:1px solid rgba(120,136,168,.12)}
+.privacy-copy strong{font-size:10.5px;display:block} .privacy-copy small{font-size:9px;color:var(--muted)}
+.library-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px}
+.lib-card{border:1px solid rgba(120,136,168,.13);border-radius:13px;overflow:hidden;background:#0b111a;cursor:pointer;transition:.18s}
+.lib-card:hover{transform:translateY(-3px);border-color:rgba(139,83,255,.36)}
+.lib-cover{height:88px;display:grid;place-items:center;font-size:35px;background:linear-gradient(145deg,#17303a,#211430)}
+.lib-info{padding:9px} .lib-info strong{display:block;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .lib-info span{font-size:8.5px;color:var(--muted)}
+.friends{padding:10px 12px}
+.friend{display:flex;align-items:center;gap:10px;padding:8px;border-radius:11px;cursor:pointer}
+.friend:hover{background:#101722}
+.favatar{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#20283a;position:relative}
+.fd{position:absolute;width:8px;height:8px;background:var(--green);border-radius:50%;right:-2px;bottom:-2px;border:2px solid #0c111a}
+.friend strong{font-size:10.5px;display:block} .friend span{font-size:8.8px;color:var(--muted);display:block;margin-top:2px}
+.badges{display:flex;gap:9px;flex-wrap:wrap;padding:14px}
+.badge{width:68px;text-align:center}
+.badge-icon{width:52px;height:52px;margin:auto;border-radius:15px;border:1px solid #4f3e78;background:linear-gradient(145deg,#251744,#111626);display:grid;place-items:center;font-size:24px}
+.badge strong{display:block;font-size:8.7px;margin-top:6px} .badge span{font-size:7.5px;color:var(--muted)}
+.dev-card{padding:14px}
+.dev-top{display:flex;justify-content:space-between;align-items:center}
+.dev-top h3{font-size:15px;margin:0} .verified{font-size:9px;color:#92e9b9;background:rgba(65,217,134,.1);border:1px solid rgba(65,217,134,.2);padding:5px 7px;border-radius:999px}
+.devstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.devstat{background:#0a1018;border:1px solid rgba(120,136,168,.12);border-radius:11px;padding:10px;text-align:center}
+.devstat strong{font-size:15px;display:block} .devstat span{font-size:8.5px;color:var(--muted)}
+.dev-card p{font-size:9.5px;line-height:1.5;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;transition:.2s;z-index:20;background:#131c2a;border:1px solid #364763;border-radius:12px;padding:11px 15px;font-size:11px;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.modalshade{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:15}
+.modalshade.show{display:flex}
+.modal{width:min(470px,92vw);border:1px solid #33405a;background:linear-gradient(180deg,#111927,#0b1018);border-radius:18px;padding:20px}
+.modal h3{margin:0 0 10px;font-size:17px}
+.modal p{font-size:10px;color:var(--muted)}
+.option{width:100%;text-align:left;border:1px solid #2d3950;background:#0c121b;color:#e4e8ef;border-radius:11px;padding:11px;margin-top:7px;cursor:pointer}
+.option strong{display:block;font-size:11px} .option span{display:block;color:var(--muted);font-size:9px;margin-top:3px}
+.close{float:right;border:0;background:transparent;color:#96a1b3;font-size:20px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><img src="file_00000000171081f486f522abd1515d04.png" alt="BatGames"></div>
+    <div class="nav">
+      <a class="navlink" href="index.html"><span class="ico">⌂</span><span>Home</span></a>
+      <a class="navlink" href="discover.html"><span class="ico">◉</span><span>Discover</span></a>
+      <button data-page="Library"><span class="ico">▦</span><span>Library</span></button>
+      <button data-page="Friends"><span class="ico">♟</span><span>Friends</span></button>
+      <button data-page="Messages"><span class="ico">▢</span><span>Messages</span></button>
+      <a class="navlink active" href="profile.html"><span class="ico">○</span><span>Profile</span></a>
+      <button data-page="Settings"><span class="ico">⚙</span><span>Settings</span></button>
+    </div>
+    <div class="mode-box">
+      <strong>Profile mode</strong><small>Show your gamer profile or developer identity.</small>
+      <div class="mode-actions">
+        <button class="active" id="gamerMode">🎮 Gamer</button>
+        <button id="devMode">🛠 Dev</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <h1>Profile</h1>
+      <div class="top-actions">
+        <button class="iconbtn" onclick="toast('Search opened')">⌕</button>
+        <button class="iconbtn" onclick="toast('Messages opened')">▢</button>
+        <button class="iconbtn" onclick="toast('Settings opened')">⚙</button>
+      </div>
+    </header>
+
+    <div class="profile-wrap">
+      <section class="banner">
+        <div class="banner-actions">
+          <button class="small-btn" onclick="toast('Profile link copied')">↗ Share profile</button>
+          <button class="small-btn" id="editProfile">✎ Edit profile</button>
+        </div>
+      </section>
+
+      <section class="identity">
+        <div class="big-avatar">P<span class="online-dot"></span></div>
+        <div class="name-wrap">
+          <h2>Player</h2>
+          <div class="handle">@player</div>
+          <div class="status-line">Currently <span>playing Tiny Dungeon Builder</span></div>
+        </div>
+        <div class="profile-stats">
+          <div class="stat"><strong>128</strong><span>Games</span></div>
+          <div class="stat"><strong>43</strong><span>Friends</span></div>
+          <div class="stat"><strong>612h</strong><span>Played</span></div>
+        </div>
+      </section>
+
+      <div class="grid">
+        <div>
+          <section class="card">
+            <div class="card-head"><strong>ABOUT</strong><span class="link" id="editAbout">EDIT</span></div>
+            <div class="about">
+              <p>Mostly here to find games I would never notice on a normal storefront. I like co-op, survival, strange indie experiments and games made by tiny teams.</p>
+              <div class="tags"><span class="tag">Indie</span><span class="tag">Survival</span><span class="tag">Co-op</span><span class="tag">RPG</span><span class="tag">Experimental</span></div>
+            </div>
+          </section>
+
+          <section class="card" style="margin-top:18px">
+            <div class="card-head"><strong>GAME LIBRARY</strong><span class="link" onclick="toast('Full library opened')">VIEW ALL</span></div>
+            <div class="library-grid">
+              <div class="lib-card" onclick="toast('Opening Tiny Dungeon Builder')"><div class="lib-cover">🏰</div><div class="lib-info"><strong>Tiny Dungeon Builder</strong><span>12.4 h played</span></div></div>
+              <div class="lib-card" onclick="toast('Opening Hollow Knight')"><div class="lib-cover">🗡️</div><div class="lib-info"><strong>Hollow Knight</strong><span>23 h played</span></div></div>
+              <div class="lib-card" onclick="toast('Opening Stardew Valley')"><div class="lib-cover">🌱</div><div class="lib-info"><strong>Stardew Valley</strong><span>45 h played</span></div></div>
+              <div class="lib-card" onclick="toast('Opening Bunker Diaries')"><div class="lib-cover">🧟</div><div class="lib-info"><strong>Bunker Diaries</strong><span>3.2 h played</span></div></div>
+            </div>
+          </section>
+
+          <section class="card" style="margin-top:18px">
+            <div class="card-head"><strong>RECENT ACTIVITY</strong><span class="link" onclick="toast('Activity history opened')">VIEW ALL</span></div>
+            <div class="activity">
+              <div class="activity-item"><div class="thumb">🏰</div><div class="acopy"><strong>Played <em>Tiny Dungeon Builder</em></strong><span>Co-op session with Alex and Luna</span></div><span class="when">12 min ago</span></div>
+              <div class="activity-item"><div class="thumb">💎</div><div class="acopy"><strong>Discovered <em>Project Zed</em></strong><span>Found through Indie Surprise</span></div><span class="when">Yesterday</span></div>
+              <div class="activity-item"><div class="thumb">⭐</div><div class="acopy"><strong>Added <em>Clockwork Tails</em></strong><span>Saved to your wishlist</span></div><span class="when">2 days ago</span></div>
+            </div>
+          </section>
+        </div>
+
+        <div>
+          <section class="card">
+            <div class="card-head"><strong>CURRENTLY PLAYING</strong><span class="link">LIVE</span></div>
+            <div class="current-game">
+              <div class="gamehero">
+                <div class="gamehero-copy"><small>CO-OP · INDIE</small><h3>Tiny Dungeon Builder</h3><span>Playing with Alex</span></div>
+              </div>
+              <div class="game-actions">
+                <button class="primary" onclick="toast('Launching Tiny Dungeon Builder')">▶ Launch</button>
+                <button class="secondary" onclick="toast('Invite menu opened')">＋ Invite friend</button>
+              </div>
+              <div class="privacy-row">
+                <div class="privacy-copy"><strong>Activity visibility: Friends</strong><small>This setting is remembered for this game.</small></div>
+                <button class="link" style="border:0;background:none" id="privacyBtn">CHANGE</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="card" style="margin-top:18px">
+            <div class="card-head"><strong>FRIENDS</strong><span class="link" onclick="toast('Friends page opened')">43 TOTAL</span></div>
+            <div class="friends">
+              <div class="friend" onclick="toast('Opening Alex profile')"><div class="favatar">A<span class="fd"></span></div><div><strong>Alex</strong><span>Playing Tiny Dungeon Builder</span></div></div>
+              <div class="friend" onclick="toast('Opening Luna profile')"><div class="favatar">L<span class="fd"></span></div><div><strong>Luna</strong><span>Playing Starlight Arena</span></div></div>
+              <div class="friend" onclick="toast('Opening NightOwl profile')"><div class="favatar">N<span class="fd"></span></div><div><strong>NightOwl</strong><span>Online</span></div></div>
+            </div>
+          </section>
+
+          <section class="card" style="margin-top:18px">
+            <div class="card-head"><strong>BADGES</strong><span class="link" onclick="toast('Badge collection opened')">VIEW ALL</span></div>
+            <div class="badges">
+              <div class="badge"><div class="badge-icon">🦇</div><strong>Early Bat</strong><span>Prototype user</span></div>
+              <div class="badge"><div class="badge-icon">💎</div><strong>Gem Hunter</strong><span>25 indies found</span></div>
+              <div class="badge"><div class="badge-icon">🤝</div><strong>Squad Up</strong><span>10 co-op joins</span></div>
+            </div>
+          </section>
+
+          <section class="card" style="margin-top:18px" id="devCard">
+            <div class="dev-card">
+              <div class="dev-top"><h3>Developer profile</h3><span class="verified">✓ Verified Developer</span></div>
+              <p>Your public developer identity can be separate from your gamer profile, while still using the same BatGames account.</p>
+              <div class="devstats">
+                <div class="devstat"><strong>3</strong><span>Games</span></div>
+                <div class="devstat"><strong>842</strong><span>Downloads</span></div>
+                <div class="devstat"><strong>4.6★</strong><span>Rating</span></div>
+              </div>
+              <button class="primary" style="width:100%;margin-top:10px" id="openDev">Open Developer Profile</button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modalshade" id="privacyModal">
+  <div class="modal">
+    <button class="close" onclick="closeModal('privacyModal')">×</button>
+    <h3>Game activity privacy</h3>
+    <p>BatGames remembers this choice for this specific game.</p>
+    <button class="option" onclick="setPrivacy('Everyone')"><strong>Everyone</strong><span>Anyone viewing your profile can see what you're playing.</span></button>
+    <button class="option" onclick="setPrivacy('Friends')"><strong>Friends</strong><span>Only your friends can see the game and Join / Watch actions.</span></button>
+    <button class="option" onclick="setPrivacy('Private')"><strong>Private game</strong><span>Your profile only says “Playing a game.”</span></button>
+    <button class="option" onclick="setPrivacy('Hidden')"><strong>Hidden</strong><span>Your profile shows no game activity at all.</span></button>
+  </div>
+</div>
+
+<div class="modalshade" id="editModal">
+  <div class="modal">
+    <button class="close" onclick="closeModal('editModal')">×</button>
+    <h3>Edit profile</h3>
+    <p>This prototype shows where profile customization would live.</p>
+    <button class="option" onclick="toast('Avatar editor opened')"><strong>Avatar</strong><span>Upload or choose a profile image.</span></button>
+    <button class="option" onclick="toast('Banner editor opened')"><strong>Profile banner</strong><span>Customize the visual header.</span></button>
+    <button class="option" onclick="toast('Bio editor opened')"><strong>Bio & interests</strong><span>Change your description and favorite genres.</span></button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(window._t);window._t=setTimeout(()=>t.classList.remove("show"),1800)}
+function openModal(id){$("#"+id).classList.add("show")}
+function closeModal(id){$("#"+id).classList.remove("show")}
+function setPrivacy(v){toast("Tiny Dungeon Builder visibility set to "+v);closeModal("privacyModal")}
+$("#privacyBtn").onclick=()=>openModal("privacyModal");
+$("#editProfile").onclick=()=>openModal("editModal");
+$("#editAbout").onclick=()=>openModal("editModal");
+$("#openDev").onclick=()=>toast("Developer Profile opened");
+$("#gamerMode").onclick=()=>{$("#gamerMode").classList.add("active");$("#devMode").classList.remove("active");toast("Gamer profile active")};
+$("#devMode").onclick=()=>{$("#devMode").classList.add("active");$("#gamerMode").classList.remove("active");toast("Developer identity selected")};
+$$(".modalshade").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)closeModal(m.id)}));
+$$("[data-page]").forEach(b=>b.onclick=()=>toast(b.dataset.page+" page selected"));
+</script>
+</body>
+</html>

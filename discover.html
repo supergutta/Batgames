@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BatGames — Discover</title>
+<style>
+:root{
+ --bg:#05070c;--panel:#0b111b;--panel2:#111827;--line:#263149;--soft:rgba(118,136,172,.16);
+ --text:#f5f7fb;--muted:#929daf;--purple:#8b53ff;--purple2:#6032d0;--purple3:#b69aff;
+ --green:#41d986;--yellow:#f3bd4f;--red:#ff6677;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#020409;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,select{font:inherit}
+body{overflow:hidden}
+.app{width:100vw;height:100vh;min-width:1050px;min-height:650px;display:grid;grid-template-columns:235px 1fr;background:radial-gradient(820px 520px at 74% 15%,rgba(110,55,225,.15),transparent 68%),linear-gradient(180deg,#080b12,#05070c 60%,#03050a)}
+.sidebar{border-right:1px solid var(--soft);background:linear-gradient(180deg,#080b12,#060910);padding:18px 14px 16px;display:flex;flex-direction:column}
+.brand{height:58px;display:flex;align-items:center;padding:0 7px 14px;border-bottom:1px solid var(--soft);margin-bottom:18px}
+.brand img{width:176px;height:44px;object-fit:cover;mix-blend-mode:screen;filter:contrast(1.15)}
+.nav{display:flex;flex-direction:column;gap:7px}
+.nav button,.navlink{height:46px;border:1px solid transparent;border-radius:13px;background:transparent;color:#97a2b6;display:flex;align-items:center;gap:12px;padding:0 13px;text-align:left;cursor:pointer;transition:.18s}
+.nav button:hover,.navlink:hover{background:rgba(255,255,255,.03);color:#fff}
+.nav button.active,.navlink.active{background:linear-gradient(90deg,rgba(111,61,225,.24),rgba(108,66,208,.05));border-color:rgba(139,83,255,.34);color:#fff;box-shadow:inset 3px 0 0 var(--purple)}
+.navlink{border:1px solid transparent;border-radius:13px;background:transparent;color:#97a2b6;display:flex;align-items:center;gap:12px;padding:0 13px;text-align:left;cursor:pointer;transition:.18s;text-decoration:none}
+.ico{width:22px;text-align:center;font-size:18px}
+.nav span:last-child{font-size:13px;font-weight:660}
+.side-note{margin-top:auto;border:1px solid rgba(139,83,255,.24);background:linear-gradient(145deg,rgba(83,43,168,.12),rgba(8,12,20,.76));border-radius:14px;padding:12px}
+.side-note strong{display:block;font-size:12px}.side-note small{display:block;color:var(--muted);font-size:10px;line-height:1.45;margin-top:5px}
+.main{overflow:auto;scrollbar-width:thin;scrollbar-color:#263149 transparent}
+.topbar{height:70px;border-bottom:1px solid var(--soft);background:rgba(6,9,15,.68);backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:space-between;padding:0 27px;position:sticky;top:0;z-index:5}
+.topbar h1{font-size:15px;margin:0}.top-actions{display:flex;gap:9px;align-items:center}
+.iconbtn{width:38px;height:38px;border-radius:12px;border:1px solid var(--soft);background:#0c121c;color:#c8d0de;cursor:pointer}.iconbtn:hover{border-color:#594089;color:white}
+.wrap{padding:26px 30px 36px;max-width:1500px;margin:0 auto}
+.hero{border:1px solid rgba(139,83,255,.28);border-radius:22px;padding:28px;background:linear-gradient(135deg,#0b111c,#13102a 68%,#0b111b);position:relative;overflow:hidden;box-shadow:0 20px 60px #0006}
+.hero:after{content:"";position:absolute;right:-70px;top:-110px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(139,83,255,.38),transparent 68%)}
+.eyebrow{font-size:10px;letter-spacing:.13em;color:var(--purple3);font-weight:900;position:relative;z-index:2}
+.hero h2{font-size:34px;line-height:1.04;margin:7px 0 7px;letter-spacing:-.03em;position:relative;z-index:2}
+.hero p{font-size:12px;color:#a5afbf;max-width:670px;line-height:1.6;margin:0;position:relative;z-index:2}
+.searchbar{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:20px;position:relative;z-index:2}
+.searchbox{display:flex;align-items:center;gap:10px;border:1px solid #2d3952;background:#090f18;border-radius:14px;padding:0 14px}
+.searchbox span{color:#7f8ba0}.searchbox input{width:100%;height:48px;border:0;outline:0;background:transparent;color:#fff;font-size:13px}.searchbox input::placeholder{color:#667287}
+.primary{height:48px;border:0;border-radius:13px;background:linear-gradient(135deg,var(--purple),var(--purple2));color:white;padding:0 18px;font-weight:800;cursor:pointer}.primary:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.tabs{display:flex;gap:8px;margin-top:18px;position:relative;z-index:2;flex-wrap:wrap}
+.tab{border:1px solid #2b354a;background:#0d131d;color:#a8b1c0;border-radius:999px;padding:8px 13px;font-size:10px;cursor:pointer}.tab.active{background:rgba(139,83,255,.17);border-color:#6c48cb;color:#fff}
+.content-grid{display:grid;grid-template-columns:260px 1fr;gap:18px;margin-top:20px}
+.filters{border:1px solid var(--soft);background:linear-gradient(180deg,#0c121c,#090e16);border-radius:18px;padding:15px;height:max-content;position:sticky;top:90px}
+.filter-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.filter-head strong{font-size:11px;letter-spacing:.05em}.reset{border:0;background:transparent;color:#9f80ff;font-size:9px;cursor:pointer}
+.filter-group{padding:12px 0;border-top:1px solid rgba(120,136,168,.11)}.filter-group:first-of-type{border-top:0}
+.filter-group label{display:block;font-size:9px;color:#6f7b90;font-weight:800;letter-spacing:.08em;margin-bottom:7px}
+.filter-group select{width:100%;background:#0a1018;color:#dce2ec;border:1px solid #2b354a;border-radius:10px;padding:9px 10px;font-size:10px;outline:none}
+.checks{display:flex;flex-direction:column;gap:8px}.check{display:flex!important;align-items:center;gap:8px;color:#aeb7c6!important;font-size:10px!important;cursor:pointer;letter-spacing:0!important;font-weight:500!important;margin:0!important}.check input{accent-color:var(--purple)}
+.obscurity{margin-top:7px}.obscurity input{width:100%;accent-color:var(--purple)}.scale{display:flex;justify-content:space-between;color:#667286;font-size:8px;margin-top:3px;gap:5px}
+.results{min-width:0}.results-head{display:flex;justify-content:space-between;align-items:end;margin:2px 0 12px}.results-head h3{font-size:18px;margin:0}.results-head p{font-size:10px;color:var(--muted);margin:4px 0 0}
+.actions{display:flex;gap:8px}.secondary{height:36px;border:1px solid #303b52;background:#0e151f;color:#dbe1ec;border-radius:10px;padding:0 12px;font-size:10px;font-weight:700;cursor:pointer}.secondary:hover{background:#151d29}
+.game-grid{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:13px}
+.game{border:1px solid var(--soft);background:linear-gradient(180deg,#0d131d,#090e16);border-radius:17px;overflow:hidden;cursor:pointer;transition:.2s;min-width:0}
+.game:hover{transform:translateY(-4px);border-color:rgba(139,83,255,.42);box-shadow:0 15px 35px #0006}
+.cover{height:150px;position:relative;display:flex;align-items:end;padding:12px;overflow:hidden}.cover:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(4,6,10,.74),transparent 62%)}
+.a{background:radial-gradient(circle at 70% 28%,#7d4cff88,transparent 28%),linear-gradient(145deg,#1b1430,#0f2430)}
+.b{background:radial-gradient(circle at 38% 30%,#e08a4670,transparent 28%),linear-gradient(145deg,#2d1e12,#111827)}
+.c{background:radial-gradient(circle at 65% 24%,#54c7bb70,transparent 30%),linear-gradient(145deg,#0f292b,#151229)}
+.d{background:radial-gradient(circle at 45% 30%,#c94f7170,transparent 30%),linear-gradient(145deg,#29131d,#151d32)}
+.e{background:radial-gradient(circle at 70% 30%,#5f8fea70,transparent 28%),linear-gradient(145deg,#101c33,#1d1428)}
+.f{background:radial-gradient(circle at 38% 30%,#85c95b70,transparent 30%),linear-gradient(145deg,#152b1c,#22192b)}
+.art{position:absolute;inset:0;display:grid;place-items:center;font-size:55px;filter:drop-shadow(0 12px 14px #0008)}
+.cover-title{position:relative;z-index:2}.cover-title small{font-size:8px;color:#c5afff;font-weight:900;letter-spacing:.08em}.cover-title strong{display:block;font-size:14px;margin-top:3px}
+.info{padding:11px 12px 13px}.desc{font-size:9.5px;line-height:1.45;color:#8f9aae;height:40px;overflow:hidden}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}.tag{font-size:8px;padding:4px 6px;border-radius:999px;border:1px solid #2e394f;color:#aeb8c7;background:#0b111a}
+.bottomline{display:flex;justify-content:space-between;align-items:center;margin-top:10px}.price{font-size:11px;font-weight:800}.reviews{font-size:8.5px;color:#7e8a9d}.hidden-gem{color:#f3cd6b}
+.ai-panel{margin-top:16px;border:1px solid rgba(139,83,255,.24);background:linear-gradient(135deg,rgba(71,41,140,.10),rgba(10,15,24,.86));border-radius:16px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ai-copy strong{display:block;font-size:11px}.ai-copy span{display:block;color:var(--muted);font-size:9px;margin-top:4px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;transition:.2s;z-index:20;background:#131c2a;border:1px solid #364763;border-radius:12px;padding:11px 15px;font-size:11px;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}
+.modalshade{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:15}.modalshade.show{display:flex}
+.modal{width:min(520px,92vw);border:1px solid #34415a;background:linear-gradient(180deg,#101826,#0a0f18);border-radius:18px;padding:20px}
+.close{float:right;border:0;background:transparent;color:#98a3b4;font-size:20px;cursor:pointer}
+.pick-card{margin-top:12px;border:1px solid rgba(139,83,255,.3);border-radius:15px;padding:16px;background:#0b111a}.pick-card .big{font-size:42px}.pick-card h3{font-size:19px;margin:7px 0 5px}.pick-card p{font-size:10px;color:var(--muted);line-height:1.5}
+@media(max-width:1200px){.game-grid{grid-template-columns:repeat(2,minmax(180px,1fr))}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><img src="file_00000000171081f486f522abd1515d04.png" alt="BatGames"></div>
+    <div class="nav">
+      <a class="navlink" href="index.html"><span class="ico">⌂</span><span>Home</span></a>
+      <a class="navlink active" href="discover.html"><span class="ico">◉</span><span>Discover</span></a>
+      <button data-page="Library"><span class="ico">▦</span><span>Library</span></button>
+      <button data-page="Friends"><span class="ico">♟</span><span>Friends</span></button>
+      <button data-page="Messages"><span class="ico">▢</span><span>Messages</span></button>
+      <a class="navlink" href="profile.html"><span class="ico">○</span><span>Profile</span></a>
+      <button data-page="Settings"><span class="ico">⚙</span><span>Settings</span></button>
+    </div>
+    <div class="side-note">
+      <strong>BatGames discovery rule</strong>
+      <small>Relevance gets a game into the pool. Popularity does not automatically decide who gets shown.</small>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <h1>Discover</h1>
+      <div class="top-actions">
+        <button class="iconbtn" onclick="document.getElementById('query').focus()">⌕</button>
+        <button class="iconbtn" onclick="toast('Messages opened')">▢</button>
+        <button class="iconbtn" onclick="toast('Profile opened')">○</button>
+      </div>
+    </header>
+
+    <div class="wrap">
+      <section class="hero">
+        <div class="eyebrow">DISCOVER SOMETHING YOU WOULD MISS ELSEWHERE</div>
+        <h2>Tell BatGames what<br>you feel like playing.</h2>
+        <p>Search normally, browse only indie games, or describe something specific. BatGames is designed to surface smaller games that actually match what you asked for.</p>
+        <div class="searchbar">
+          <div class="searchbox"><span>⌕</span><input id="query" placeholder="Example: a cheap 2D baseball game with local multiplayer"></div>
+          <button class="primary" id="findBtn">✨ Find games</button>
+        </div>
+        <div class="tabs">
+          <button class="tab active" data-mode="all">All games</button>
+          <button class="tab" data-mode="indie">💎 Indie only</button>
+          <button class="tab" data-mode="hidden">🕳 Hidden gems</button>
+          <button class="tab" data-mode="experimental">🧪 Experimental</button>
+        </div>
+      </section>
+
+      <div class="content-grid">
+        <aside class="filters">
+          <div class="filter-head"><strong>FILTERS</strong><button class="reset" id="resetBtn">RESET</button></div>
+          <div class="filter-group">
+            <label>GENRE</label>
+            <select id="genre"><option>Any genre</option><option>Survival</option><option>RPG</option><option>Sports</option><option>Horror</option><option>Strategy</option></select>
+          </div>
+          <div class="filter-group">
+            <label>PLAY STYLE</label>
+            <div class="checks">
+              <label class="check"><input type="checkbox"> Single-player</label>
+              <label class="check"><input type="checkbox"> Online co-op</label>
+              <label class="check"><input type="checkbox"> Local multiplayer</label>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label>PRICE</label>
+            <select><option>Any price</option><option>Free</option><option>Under $5</option><option>Under $10</option><option>Under $20</option></select>
+          </div>
+          <div class="filter-group">
+            <label>VISUAL STYLE</label>
+            <div class="checks">
+              <label class="check"><input type="checkbox"> 2D</label>
+              <label class="check"><input type="checkbox"> Pixel art</label>
+              <label class="check"><input type="checkbox"> 3D</label>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label>HOW OBSCURE?</label>
+            <div class="obscurity"><input id="obscure" type="range" min="0" max="3" value="2"><div class="scale"><span>Popular</span><span>Indie</span><span>Hidden</span><span>Who made this?</span></div></div>
+          </div>
+          <div class="filter-group">
+            <label>SPECIAL</label>
+            <div class="checks">
+              <label class="check"><input type="checkbox"> Demo available</label>
+              <label class="check"><input type="checkbox"> Early access</label>
+              <label class="check"><input type="checkbox"> Free / pay what you want</label>
+            </div>
+          </div>
+        </aside>
+
+        <section class="results">
+          <div class="results-head">
+            <div><h3 id="resultsTitle">Recommended for you</h3><p id="resultsSub">A mixed pool with smaller titles given room to appear.</p></div>
+            <div class="actions"><button class="secondary" id="shuffleBtn">🎲 Surprise me</button><button class="secondary" id="refreshBtn">↻ Refresh</button></div>
+          </div>
+
+          <div class="game-grid" id="grid"></div>
+
+          <div class="ai-panel">
+            <div class="ai-copy"><strong>Can't decide?</strong><span>BatGames can pick one game from this exact result pool instead of giving you more choices.</span></div>
+            <button class="primary" style="height:40px" id="pickBtn">Pick one for me</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modalshade" id="pickModal">
+  <div class="modal">
+    <button class="close" onclick="closeModal()">×</button>
+    <div style="font-size:10px;letter-spacing:.1em;color:#ad8fff;font-weight:900">BATGAMES PICKED</div>
+    <div class="pick-card" id="pickCard"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const games = [
+ {n:"Project Zed",icon:"🧟",type:"Indie · Survival",price:"$5.99",reviews:"34 reviews",desc:"Tiny 2D zombie survival game with scavenging, shelters and short runs.",cls:"a",tags:["2D","Survival","Hidden gem"]},
+ {n:"Pixel Pitch",icon:"⚾",type:"Indie · Sports",price:"$4.99",reviews:"18 reviews",desc:"Arcade-style 2D baseball focused on local matches and quick seasons.",cls:"b",tags:["2D","Baseball","Local multiplayer"]},
+ {n:"Deep Signal",icon:"📡",type:"Indie · Horror",price:"$3.99",reviews:"11 reviews",desc:"A lonely radio operator starts receiving signals from somewhere impossible.",cls:"c",tags:["Horror","Short","Experimental"]},
+ {n:"Moonlit Workshop",icon:"🔧",type:"Indie · Crafting",price:"$6.49",reviews:"62 reviews",desc:"Build strange machines at night and sell them before sunrise.",cls:"d",tags:["Crafting","Co-op","Indie"]},
+ {n:"Tiny Kingdom",icon:"👑",type:"Indie · Strategy",price:"$9.49",reviews:"89 reviews",desc:"A small-scale kingdom sim where every citizen has a job and personality.",cls:"e",tags:["Strategy","Simulation","Indie"]},
+ {n:"Bunker Diaries",icon:"🏚️",type:"Indie · Survival",price:"$7.29",reviews:"27 reviews",desc:"Manage supplies and relationships in an underground shelter after collapse.",cls:"f",tags:["Survival","Story","Hidden gem"]},
+ {n:"Clockwork Tails",icon:"⚙️",type:"Indie · Platformer",price:"$5.99",reviews:"104 reviews",desc:"A handmade platformer about a mechanical fox restoring a broken city.",cls:"b",tags:["Platformer","2D","Indie"]},
+ {n:"Voidwalkers",icon:"🌌",type:"Indie · Roguelite",price:"$9.99",reviews:"146 reviews",desc:"Explore unstable worlds with friends and escape before reality collapses.",cls:"a",tags:["Co-op","Roguelite","Indie"]},
+ {n:"Garden Story",icon:"🌿",type:"Indie · Adventure",price:"$8.99",reviews:"73 reviews",desc:"Restore a tiny village, meet strange neighbors and uncover what damaged the valley.",cls:"c",tags:["Adventure","Cozy","Indie"]}
+];
+
+function render(list){
+ const root=document.getElementById("grid");
+ root.innerHTML=list.slice(0,6).map(g=>`
+ <article class="game" onclick="toast('Opening ${g.n} store page')">
+   <div class="cover ${g.cls}">
+     <div class="art">${g.icon}</div>
+     <div class="cover-title"><small>${g.type.toUpperCase()}</small><strong>${g.n}</strong></div>
+   </div>
+   <div class="info">
+     <div class="desc">${g.desc}</div>
+     <div class="tags">${g.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+     <div class="bottomline"><span class="price">${g.price}</span><span class="reviews">${g.reviews}</span></div>
+   </div>
+ </article>`).join("");
+}
+function shuffled(){return [...games].sort(()=>Math.random()-.5)}
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");clearTimeout(window.t);window.t=setTimeout(()=>t.classList.remove("show"),1800)}
+function closeModal(){document.getElementById("pickModal").classList.remove("show")}
+function pickOne(){
+ const g=games[Math.floor(Math.random()*games.length)];
+ document.getElementById("pickCard").innerHTML=`<div class="big">${g.icon}</div><h3>${g.n}</h3><p>${g.desc}</p><button class="primary" style="width:100%;margin-top:8px" onclick="toast('Opening ${g.n} store page')">View store page</button>`;
+ document.getElementById("pickModal").classList.add("show");
+}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+ b.classList.add("active");
+ const mode=b.dataset.mode;
+ const titles={
+   all:["Recommended for you","A mixed pool with smaller titles given room to appear."],
+   indie:["Indie discovery","Only independently developed or published games."],
+   hidden:["Hidden gems","Games with low visibility are intentionally pushed higher in the pool."],
+   experimental:["Experimental lab","Unusual, unfinished or risky ideas that developers are testing."]
+ };
+ document.getElementById("resultsTitle").textContent=titles[mode][0];
+ document.getElementById("resultsSub").textContent=titles[mode][1];
+ render(shuffled());
+ toast(titles[mode][0]+" active");
+});
+document.getElementById("findBtn").onclick=()=>{
+ const q=document.getElementById("query").value.trim();
+ if(!q)return toast("Describe what kind of game you want");
+ render(shuffled());
+ toast('Searching for: "'+q+'"');
+};
+document.getElementById("query").onkeydown=e=>{if(e.key==="Enter")document.getElementById("findBtn").click()};
+document.getElementById("refreshBtn").onclick=()=>{render(shuffled());toast("Results refreshed")};
+document.getElementById("shuffleBtn").onclick=pickOne;
+document.getElementById("pickBtn").onclick=pickOne;
+document.getElementById("resetBtn").onclick=()=>{
+ document.querySelectorAll(".filters input[type=checkbox]").forEach(x=>x.checked=false);
+ document.querySelectorAll(".filters select").forEach(x=>x.selectedIndex=0);
+ document.getElementById("obscure").value=2;
+ toast("Filters reset");
+};
+document.querySelectorAll("[data-page]").forEach(b=>b.onclick=()=>toast(b.dataset.page+" page selected"));
+document.getElementById("pickModal").addEventListener("click",e=>{if(e.target.id==="pickModal")closeModal()});
+render(games);
+</script>
+</body>
+</html>
